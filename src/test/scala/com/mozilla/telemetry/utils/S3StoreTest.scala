@@ -13,6 +13,7 @@ import com.amazonaws.services.s3.S3ClientOptions
 import com.amazonaws.services.s3.model.ObjectMetadata
 import org.apache.commons.io.IOUtils
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
+import com.github.luben.zstd.ZstdOutputStream
 
 
 class S3StoreTest extends FlatSpec with Matchers with BeforeAndAfterAll {
@@ -88,6 +89,19 @@ class S3StoreTest extends FlatSpec with Matchers with BeforeAndAfterAll {
     metadata.setContentEncoding("gzip")
     client.putObject(bucketName, "gzipped", stream, metadata)
     IOUtils.toString(S3Store.getKey(bucketName, "gzipped")) should be ("foo")
+  }
+
+  it can "read zstd files" in {
+    val obj = new ByteArrayOutputStream()
+    val zstd = new ZstdOutputStream(obj)
+    zstd.write("foo".getBytes())
+    zstd.close()
+
+    val stream = new ByteArrayInputStream(obj.toByteArray())
+    val metadata = new ObjectMetadata()
+    metadata.setContentEncoding("zstd")
+    client.putObject(bucketName, "zstd", stream, metadata)
+    IOUtils.toString(S3Store.getKey(bucketName, "zstd")) should be ("foo")
   }
 
   it can "read multiple batches" in {

@@ -12,6 +12,7 @@ import java.util.zip.GZIPInputStream
 import awscala.s3.{Bucket, S3}
 import org.apache.log4j.Logger
 import scala.collection.JavaConverters._
+import com.github.luben.zstd.ZstdInputStream
 
 object S3Store {
   @transient private[telemetry] implicit lazy val s3: S3 = S3()
@@ -23,6 +24,7 @@ object S3Store {
 
     encoding match {
       case "gzip" => new GZIPInputStream(s3Object.getObjectContent)
+      case "zstd" => new ZstdInputStream(s3Object.getObjectContent)
       case _ => s3Object.getObjectContent
     }
   }

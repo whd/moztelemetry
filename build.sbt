@@ -17,7 +17,8 @@ libraryDependencies ++= Seq(
   "org.apache.commons" % "commons-io" % "1.3.2" % "test",
   "com.github.seratch" %% "awscala" % "0.5.+",
   "com.amazonaws" % "aws-java-sdk" % "1.11.83",
-  "com.google.protobuf" % "protobuf-java" % "2.5.0"
+  "com.google.protobuf" % "protobuf-java" % "2.5.0",
+  "com.github.luben" % "zstd-jni" % "1.1.3"
 )
 /*
  The HBase client requires protobuf-java 2.5.0 but scalapb uses protobuf-java 3.x
